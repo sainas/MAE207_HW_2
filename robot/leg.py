@@ -63,8 +63,8 @@ class Leg:
 
         else:
             self.drv = None
-            self.joint_0_pos = 2
-            self.joint_1_pos = 1.4
+            self.joint_0_pos = 1.57
+            self.joint_1_pos = 1.57
 
         # home angles
         self.joint_0_home = 0
@@ -250,7 +250,7 @@ class Leg:
 
         # solution parameters
         beta = 0.1    # step size
-        epsilon = 0.5     # stop error
+        epsilon = 0.1     # stop error
         for kk in range(1000):
 
             (alpha_0,alpha_1) = self.compute_internal_angles(theta_current[0],theta_current[1])
@@ -268,13 +268,13 @@ class Leg:
             x_delta = (x_target - x_current)
 
             error = sympy.N(Matrix([x_t-x, y_t-y]))
-            if error.norm()< 0.5:
+            if error.norm()< 0.1:
                 break
             x_delta_t = np.array([x_delta]).T
             theta_current = beta*np.dot(J_inv, x_delta_t) + theta_current
 
             theta_current = np.array(theta_current).astype(np.float64)
-
+            self.set_joint_pos(theta_0,theta_1)
         return (theta_current[0],theta_current[1])
 
 
